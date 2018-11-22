@@ -20,11 +20,12 @@ class Heap(object):
         return self.__size == 0
 
     def get_heap(self):
-        return not self.__heap
+        return self.__heap
 
     def __build_min_heap(self):
         # start from the level that is one level up of the leave
         n = len(self.__heap) // 2 - 1
+        # range(start, stop, step), step indicates the next element is larger than pre element "step" unit.
         for idx in range(n, -1, -1):
             self.__sift_down(idx)
 
@@ -59,13 +60,15 @@ class Heap(object):
             left = (curIdx << 1) + 1
             right = (curIdx << 1) + 2
 
+            # 注意保护下标，防止越界
             if left < len(heap) and heap[left] < heap[curIdx]:
                 smaller = left
             if right < len(heap) and heap[right] < heap[smaller]:
                 smaller = right
 
             # break out the loop if the curIdx is smaller than its child
-            if smaller == curIdx: break
+            if smaller == curIdx:
+                break
 
             # exchange the value of curIdx with smaller element of its child
             heap[curIdx], heap[smaller] = heap[smaller], heap[curIdx]
@@ -106,3 +109,6 @@ print(rs)
 
 arr1 = [(5, 0, 0), (4, 0, 1), (3, 1, 0)]
 heap1 = Heap(arr1)
+
+for i in range(10, -1, -2):
+    print(i)

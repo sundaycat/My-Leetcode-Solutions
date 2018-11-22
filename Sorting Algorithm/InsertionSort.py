@@ -8,3 +8,7 @@ def insertion_sort(arr):
         arr[i + 1] = current
 
     return None
+
+arr = [3,4,1]
+insertion_sort(arr)
+print(arr)

@@ -1,12 +1,16 @@
-class ListNode(object):
+from ListNode import ListNode
 
-    def __init__(self, value):
-        self.next = None
-        self.value = value
+'''
+key points:
+    1. dummy node
+    2. merge sort two list
+    3. quick sort a list by reference
+    4. selection sort a list by reference
+'''
 
 class LinkedList(object):
 
-    def __init__(self, values: object) -> object:
+    def __init__(self, values):
 
         if len(values) > 0:
             value = values[0]
@@ -122,7 +126,9 @@ class LinkedList(object):
 
         return dummy.next
 
-    def merge_sort(self, start, end, dicts):
+    '''
+    # using dictionary to keep track of the original index of each node.
+    def merge_sort_help(self, start, end, dicts):
 
         if (end - start) == 1:
             # cutoff the linked list before sorting
@@ -131,10 +137,54 @@ class LinkedList(object):
         else:
             # applied dictionary {}
             mid = (start + end) // 2
-            l_list = self.merge_sort(start, mid, dicts) #[start, mid)
-            r_list = self.merge_sort(mid, end, dicts) #[mid, end)
+            l_list = self.merge_sort_help(start, mid, dicts)     # [start, mid)
+            r_list = self.merge_sort_help(mid, end, dicts)       # [mid, end)
 
         return self.merge_list(l_list, r_list)
+    
+    def merge_sort(self):
+        # generate a dictionary for the current linkedlist
+        dicts = {}
+        cur, keys = self.head, 0
+        while cur:
+            dicts[keys] = cur
+            cur = cur.next
+            keys += 1
+
+        return self.merge_sort_help(0, len(dicts), dicts)
+    '''
+
+    # 运用快慢指针，将快慢指针先指向头结点，快指针移动2个步长，慢指针移动1个步长，当快指针指向链表末尾的时候，慢指针刚好就在中间节点上。
+    def find_middle(self, head):
+
+        if not head or not head.next:
+            return head
+
+        slow = fast = head
+        while fast.next and fast.next.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        return slow
+
+    def merge_sort_helper(self, head):
+
+        # base case, return the node itself when the list length is 1
+        if not head or not head.next:
+            return head
+
+        # find the middle node by slow-fast pointer and cut off the list before sorting
+        mid = self.find_middle(head)
+        rhead = mid.next
+        mid.next = None
+
+        l_list = self.merge_sort_helper(head)
+        r_list = self.merge_sort_helper(rhead)
+
+        return self.merge_list(l_list, r_list)
+
+    def merge_sort(self):
+        return self.merge_sort_helper(self.head)
 
     # selection sort linked list, swapping by nodes reference
     def selection_sort(self, head):
@@ -267,7 +317,141 @@ class LinkedList(object):
 
         return
 
+    # remove the node associated with target value, using recurrsion.
+    def remove_target(self, head, target):
+        if not head:
+            return head
 
+        if head.value == target:
+            head = self.remove_target(head.next, target)
+        else:
+            head.next = self.remove_target(head.next, target)
+
+        return head
+
+    # Remove Duplicates from Sorted List 1
+    def __remove_duplicate(self, head):
+        if not head:
+            return head
+
+        cur = head
+        # outer loop go through the whole linked list
+        while cur:
+            # using inner loop instead of if-else to handle multiple-duplicate case like: 1-1-1-None
+            while cur.next and cur.next.value == cur.value:
+                cur.next = cur.next.next
+            cur = cur.next
+
+    def remove_duplicate(self):
+        self.__remove_duplicate(self.head)
+
+    # 82. Remove Duplicates from Sorted List 2
+    def __remove_duplicate_1(self, head):
+        if not head:
+            return head
+
+        cur = dummy = ListNode(None)
+        dummy.next = head
+        while cur.next and cur.next.next:
+            if cur.next.value == cur.next.next.value:
+                cur_val = cur.next.value
+                while cur.next and cur.next.value == cur_val:
+                    cur.next = cur.next.next
+            else:
+                cur = cur.next
+
+        return dummy.next
+
+    def remove_duplicate_1(self):
+        self.head = self.__remove_duplicate_1(self.head)
+
+    # O(n)
+    def rotate_right(self, head, k):
+
+        if not head or not head.next or k == 0:
+            return head
+
+        cur = head
+        l = 0
+        while cur:
+            l += 1
+            cur = cur.next
+
+        # find the position of the head node after rotation
+        if k % l == 0: return head
+        pos = l - (k % l) + 1
+
+        # find the new head node and its previous node and cut off the linkedlist
+        pre = head
+        while pos > 2:
+            pre = pre.next
+            pos -= 1
+        new_head = pre.next
+        pre.next = None
+
+        # find the tail node of the second list
+        tail = new_head
+        while tail.next:
+            tail = tail.next
+
+        # merge two list together to form the rotated linkedlist
+        tail.next = head
+        head = new_head
+
+        return head
+
+    # recursion version
+    def rotate_right_1(self, head, k):
+        if not head or k == 0:
+            return head
+
+        # 每次递归时，先循环找出新链表的尾节点及它之前的节点
+        pre = tail = head
+        l = 1
+        while tail.next:
+            pre = tail
+            tail = tail.next
+            l += 1
+
+        # 计算剩下的rotation次数
+        k = k % l
+
+        # make the rotation
+        tail.next = head
+        pre.next = None
+        head = tail
+
+        # 继续递归
+        head = self.rotate_right_1(head, k - 1)
+
+        return head
+
+    def rotate_right_2(self, head, k):
+        if not head or not head.next or k == 0:
+            return head
+
+        # find out the length of the list and its tail node
+        l = 1, tail = head
+        while tail.next:
+            l += 1
+            tail = tail.next
+
+        # connect tail with head node to form a circle
+        if k % l == 0: return head
+        tail.next = head
+
+        # calculate the position to cut off the circle to make the rotation
+        pos = l - (k % l)
+        new_tail = new_head = head
+        while pos > 0:
+            new_tail = new_head
+            new_head = new_head.next
+            pos -= 1
+        new_tail.next = None
+        head = new_head
+        return head
+
+'''    
 # [5,4,8,6,2,3] [3,4,1,2]
 # test case for quick sort
 values = [5,4,8,6,2,3]
@@ -280,6 +464,34 @@ list6 = LinkedList(values)
 
 values = [5,4,6,8,2,3]
 list7 = LinkedList(values)
+list7.head = list7.merge_sort()
 list7.print_list()
-list7.reverse(list7.head)
-list7.print_list()
+
+#list7.reverse(list7.head)
+#list7.print_list()
+
+values = [1]
+list8 = LinkedList(values)
+list8.print_list()
+x = list8.find_middle()
+print(x.value)
+
+
+values = [5,6,8,6,3,2]
+list1 = LinkedList(values)
+list1.print_list()
+list1.remove_target(list1.head, 6)
+list1.print_list()
+'''
+
+values = [1,5,5,5]
+list2 = LinkedList(values)
+list2.print_list()
+list2.remove_duplicate_1()
+list2.print_list()
+
+values = [1,2]
+list3 = LinkedList(values)
+#list3.reverse(list3.head)
+list3.head = list3.rotate_right_2(list3.head, 2)
+list3.print_list()

@@ -27,6 +27,6 @@ def merge_sort(arr):
         return arr
     else:
         mid = len(arr) // 2
-        l_arr = merge_sort(arr[:mid]) # [0, mid)
-        r_arr = merge_sort(arr[mid:]) # [mid, end]
+        l_arr = merge_sort(arr[:mid])  # [0, mid)
+        r_arr = merge_sort(arr[mid:])  # [mid, end]
         return merge(l_arr, r_arr)

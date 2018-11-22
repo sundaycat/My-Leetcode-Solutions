@@ -9,7 +9,7 @@ def partition(arr, start, end, pivot):
     # swap pivot to the first element of the array
     arr[start], arr[pivot] = arr[pivot], arr[start]
     i = start
-    # end is larger than the largest index one unit
+    # "end" would not be included in the range of j
     for j in range(start + 1, end):
         if arr[j] < arr[start]:
             # find the element that larger than pivot and swap them with the (i + 1)th element
@@ -21,6 +21,7 @@ def partition(arr, start, end, pivot):
     return i
 
 # end is one larger than the index of last element
+# end-th element would not be involved during sorting
 def quick_sort(arr, start, end):
 
     if start < end:
@@ -28,3 +29,8 @@ def quick_sort(arr, start, end):
         pivot = partition(arr, start, end, idx)
         quick_sort(arr, start, pivot)
         quick_sort(arr, pivot + 1, end)
+
+
+arr = [4,2,7,2,3,9,10,1,21,18,96,21,13]
+quick_sort(arr, 0, len(arr))
+print(arr)

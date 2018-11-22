@@ -3,9 +3,9 @@ from Heap import Heap
 '''
 Q: Merger K sorted arrays
 
-Solution:
-    Step 1: create a min heap, push the first element of each array into the heap
-    Step 2: Each time pop an element form the heap, and then push the next element into the heap
+Solution: O(K + nlogk)
+    Step 1: create a min heap, push the first element of each array into the heap, O(k)
+    Step 2: Each time pop an element fromm the heap, and then push the next element into the heap O(nlogk)
     
 Note: python use default sorting for tuples, that is it only compares the 1st element of the tuple
 '''
