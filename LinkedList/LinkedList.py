@@ -24,7 +24,7 @@ class LinkedList(object):
 
     def print_list(self):
         cur = self.head
-        while cur != None:
+        while cur is not None:
             print(cur.value, end = ', ')
             cur = cur.next
         print()
@@ -40,7 +40,7 @@ class LinkedList(object):
         tail.next = ListNode(value)
 
     # remove the nodes contained the target value.
-    # the original linkedlist remain the same.
+    # the original linked list remain the same.
     def remove_nodes(self, head, target):
 
         dummy = ListNode(None)
@@ -317,7 +317,7 @@ class LinkedList(object):
 
         return
 
-    # remove the node associated with target value, using recurrsion.
+    # remove the node associated with target value, using recursion.
     def remove_target(self, head, target):
         if not head:
             return head
@@ -431,7 +431,7 @@ class LinkedList(object):
             return head
 
         # find out the length of the list and its tail node
-        l = 1, tail = head
+        l = 1; tail = head;
         while tail.next:
             l += 1
             tail = tail.next

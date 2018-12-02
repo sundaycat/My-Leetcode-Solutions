@@ -1,10 +1,10 @@
 from Heap import Heap
 import heapq
 '''
-Find smallest k elements form an unsorted array of size n
+Q: Find smallest k elements form an unsorted array of size n
 '''
 
-# Solution 1:
+# Solution 1: O(n + klogn)
 #   1. heapify the array to form a min heap of size n, O(n)
 #   2. pop out its first k smallest element(heapify k time), O(klogn)
 def top_k_smallest_1(arr, k):
@@ -21,7 +21,7 @@ def top_k_smallest_1(arr, k):
 
     return rs
 
-# Solution 2:
+# Solution 2: O(k + (n-k)logK)
 #   1. heapify the first k elements to form a max heap of size k, O(k)
 #   2. iterate over the rest n - k elements one by one. When transverse a new element, compare with the largest
 #      element of the previous k smallest candidates: O((n-k)logk)
@@ -50,6 +50,7 @@ def top_k_smallest_3(arr, k):
         return []
 
     rs = [-i for i in arr[0:k]]
+    # invoke heapify function in file heapq.
     heapq.heapify(rs)
 
     for i in range(k+1, len(arr)):
@@ -58,6 +59,7 @@ def top_k_smallest_3(arr, k):
             heapq.heappush(rs, -arr[i])
 
     return [-i for i in rs]
+
 
 arr = [6, 8, 9, 0, 1, 5, 4, 11, 15, 2, -1, 2]
 x = top_k_smallest_2(arr, 5)

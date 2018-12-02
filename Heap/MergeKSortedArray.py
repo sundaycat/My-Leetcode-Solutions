@@ -1,7 +1,7 @@
 from Heap import Heap
 
 '''
-Q: Merger K sorted arrays
+Q: Merger K sorted arrays, n is the number of all elements in k arrays.
 
 Solution: O(K + nlogk)
     Step 1: create a min heap, push the first element of each array into the heap, O(k)
@@ -36,6 +36,6 @@ def merge_sorted_arrays(arr_of_arrs):
     return rs
 
 
-x = [[1, 2, 3], [1, 4, 9], [0, 2, 6]]
+x = [[1, 2, 3], [1, 4, 9, 10], [0, 2, 6, 8]]
 y = merge_sorted_arrays(x)
 print(y)
